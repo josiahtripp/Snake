@@ -29,6 +29,7 @@
     char grid[GRID_SIZE][GRID_SIZE];
     Coord snake_body[256];
     Coord food, tail;
+    Texture endText;
     int snake_direction;
     int snake_length;
     int generate_food = 1;
@@ -68,4 +69,7 @@
 
     /* Place snake food at a random, valid location */
     void placeFood();
+
+    /* Loads end-game message and associated textures */
+    void initializeEnd();
 #endif
