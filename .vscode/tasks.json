@@ -18,7 +18,7 @@
                 "args": [
                     "RAYLIB_PATH=C:/raylib/raylib",
                     "PROJECT_NAME=${fileBasenameNoExtension}",
-                    "OBJS=${fileBasenameNoExtension}.c",
+                    "OBJS=${fileBasenameNoExtension}.c grid.c entities.c ",
                     "BUILD_MODE=DEBUG"
                 ],
             },

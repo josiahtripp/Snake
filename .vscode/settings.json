@@ -11,6 +11,8 @@
 	"files.associations": {
 		"time.h": "c",
 		"snake.h": "c",
-		"raylib.h": "c"
+		"raylib.h": "c",
+		"entities.h": "c",
+		"*.m": "c"
 	}
 }

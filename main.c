@@ -1,132 +1,111 @@
 #include "raylib.h"
+#include "grid.h"
+#include "entities.h"
 #include <stdlib.h>
-#include <time.h>
 
-#ifndef NULL
-    #define NULL (void*) 0
-#endif
+double speed = .0667;
+double lastUpdateTime = 0;
+int lastUpdateDirection;
+int lastUpdateLength = 0;
 
-int global_snake_speed = 100;
-Texture2D head_texture[4];
+Texture2D score_title, score_value;
 
-void initialize_snake(int* length, Vector2 body[], Vector2* velocity);
+/* Passes value for collision detection when update is run */
+int updateAll();
 
-Vector2 genRandCoord();
+void fetchUserInput();
 
-void print_snake(int length, Vector2 body[], Vector2 velocity);
-
-void updateSnakeLocation(Vector2 body[], Vector2 velocity);
-
-void loadTextures();
-
-void update_velocity(Vector2* velocity);
+void drawScore();
 
 int main(){
 
-    Vector2 snake_body[256], head_velocity;
-    int snake_length;
+    /* */
 
-    srand(time(NULL));
+    InitWindow(CELL_PXL * GRID_SIZE, (CELL_PXL * GRID_SIZE) + SCORE_MARGIN, "SNAKE");
 
-    /* add snake head component */
-    initialize_snake(&snake_length, snake_body, &head_velocity);
+    // Initialization / setup functions (prepare for entry to game loop)
+    initializeGrid();
+    initializeSnake();
+    initializeFood();
 
-    /* Initialize window */
-    InitWindow(800, 800, "snake");
+    SetTargetFPS(60);
+    lastUpdateTime = GetTime();
+    while(updateAll() && !WindowShouldClose()){
 
-    loadTextures();
+        BeginDrawing();
+            drawScore();
+            fetchUserInput();
+            drawGrid();
 
-    SetTargetFPS(165);
+        EndDrawing();
+    }
+
+    /* Application was closed */
+    if(WindowShouldClose()){
+        exit(0);
+    }
+
+    /* Game Over: Kill Snake */
+    killSnake();
+
     while(!WindowShouldClose()){
-        updateSnakeLocation(snake_body, head_velocity);
-        print_snake(snake_length, snake_body, head_velocity);
-        update_velocity(&head_velocity);
-    }
-
-    return 0;
-}
-
-void initialize_snake(int* length, Vector2 body[], Vector2* velocity){
-
-    *length = 1;
-    body[0] = genRandCoord();
-    
-    velocity->x = 0;
-    velocity->y = 0;
-}
-
-Vector2 genRandCoord(){
-
-    Vector2 randVec2 = {
-
-        (float) 50*(rand() % 16),
-        (float) 50*(rand() % 16)
-    };
-    return randVec2;
-}
-
-void print_snake(int length, Vector2 body[], Vector2 velocity){
-
-    BeginDrawing();
-    ClearBackground(BLACK);
-
-    /* Draw snake head */
-    if(velocity.x > 0){
-
-        DrawTexture(head_texture[1], body[0].x, body[0].y, WHITE);
-    }
-    else if(velocity.x < 0){
-
-        DrawTexture(head_texture[3], body[0].x, body[0].y, WHITE);
-    }
-    else if(velocity.y > 0){
-
-        DrawTexture(head_texture[2], body[0].x, body[0].y, WHITE);
-    }
-    else{
-
-        DrawTexture(head_texture[0], body[0].x, body[0].y, WHITE);
-    }
-    EndDrawing();
-}
-
-void updateSnakeLocation(Vector2 body[], Vector2 velocity){
-
-    body[0].x += velocity.x * global_snake_speed * GetFrameTime();
-    body[0].y += velocity.y * global_snake_speed * GetFrameTime();
-}
-
-void loadTextures(){
-
-    Image snake_head_image = LoadImage("Snake_head.png");
-    head_texture[0] = LoadTextureFromImage(snake_head_image);
-
-    for(int i = 1; i < 4; i++){
-        ImageRotateCW(&snake_head_image);
-        head_texture[i] = LoadTextureFromImage(snake_head_image);
+        BeginDrawing();
+        drawGrid();
+        EndDrawing();
     }
 }
 
-void update_velocity(Vector2* velocity){
+int updateAll(){
+
+    /* Causes jittering-refresh */
+    double currentTime = GetTime();
+    if(currentTime - lastUpdateTime >= speed){
+        lastUpdateTime = currentTime;
+
+        /* Prevents opposite direction traversal */
+        lastUpdateDirection = snake_direction;
+
+        /* Collision detected */
+        if(!updateSnake()){
+            return 0;
+        }
+        emptyGrid();
+        plotSnake();
+        updateFood();
+    }
+    return 1;
+}
+
+void fetchUserInput(){
 
     if(IsKeyPressed(KEY_UP)){
-
-        velocity->x = 0;
-        velocity->y = -1;
+        if(lastUpdateDirection == SNAKE_DOWN){
+            return;
+        }
+        snake_direction = SNAKE_UP;
     }
     else if(IsKeyPressed(KEY_DOWN)){
-
-        velocity->x = 0;
-        velocity->y = 1;
+        if(lastUpdateDirection == SNAKE_UP){
+            return;
+        }
+        snake_direction = SNAKE_DOWN;
     }
     else if(IsKeyPressed(KEY_RIGHT)){
-
-        velocity->x = 1;
-        velocity->y = 0;
+        if(lastUpdateDirection == SNAKE_LEFT){
+            return;
+        }
+        snake_direction = SNAKE_RIGHT;
     }
     else if(IsKeyPressed(KEY_LEFT)){
-
-        velocity->x = -1;
-        velocity->y = 0;
+        if(lastUpdateDirection == SNAKE_RIGHT){
+            return;
+        }
+        snake_direction = SNAKE_LEFT;
     }
+}
+
+void drawScore(){
+
+    DrawRectangleLines(0, 0, GRID_SIZE * CELL_PXL, SCORE_MARGIN, WHITE);
+    
 }
