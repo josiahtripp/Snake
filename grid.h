@@ -18,7 +18,7 @@
 
     /* Grid size / Pixels per cell */
     #define GRID_SIZE 16
-    #define CELL_PXL 25
+    #define CELL_PXL 50
     #define SCORE_MARGIN 100
 
     /* Element grid */
