@@ -1,2 +1,4 @@
 # Snake
-Simple Snake game made using raylib graphics API and C
+A simple Snake game made using Raylib and C
+
+Developed for use on Windows machines

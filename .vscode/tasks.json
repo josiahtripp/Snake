@@ -10,23 +10,15 @@
             "args": [
                 "PLATFORM=PLATFORM_DESKTOP",
                 "BUILD_MODE=DEBUG",
-                "PROJECT_NAME=${fileBasenameNoExtension}",
-                "OBJS=${fileBasenameNoExtension}.c"
+                "PROJECT_NAME=Snake",
+                "OBJS=src/main.c src/grid.c src/entities.c src/audio.c src/gui.c"
             ],
             "windows": {
                 "command": "mingw32-make.exe",
                 "args": [
                     "RAYLIB_PATH=C:/raylib/raylib",
-                    "PROJECT_NAME=${fileBasenameNoExtension}",
-                    "OBJS=${fileBasenameNoExtension}.c grid.c entities.c ",
-                    "BUILD_MODE=DEBUG"
-                ],
-            },
-            "osx": {
-                "args": [
-                    "RAYLIB_PATH=<path_to_raylib>/raylib",
-                    "PROJECT_NAME=${fileBasenameNoExtension}",
-                    "OBJS=${fileBasenameNoExtension}.c",
+                    "PROJECT_NAME=Snake",
+                    "OBJS=src/main.c src/grid.c src/entities.c src/audio.c src/gui.c",
                     "BUILD_MODE=DEBUG"
                 ],
             },
@@ -44,22 +36,15 @@
             "command": "make",
             "args": [
                 "PLATFORM=PLATFORM_DESKTOP",
-                "PROJECT_NAME=${fileBasenameNoExtension}",
-                "OBJS=${fileBasenameNoExtension}.c"
+                "PROJECT_NAME=Snake",
+                "OBJS=src/main.c src/grid.c src/entities.c src/audio.c src/gui.c",
             ],
             "windows": {
                 "command": "mingw32-make.exe",
                 "args": [
                     "RAYLIB_PATH=C:/raylib/raylib",
-                    "PROJECT_NAME=${fileBasenameNoExtension}",
-                    "OBJS=${fileBasenameNoExtension}.c"
-                ],
-            },
-            "osx": {
-                "args": [
-                    "RAYLIB_PATH=<path_to_raylib>/raylib",
-                    "PROJECT_NAME=${fileBasenameNoExtension}",
-                    "OBJS=${fileBasenameNoExtension}.c"
+                    "PROJECT_NAME=Snake",
+                    "OBJS=src/main.c src/grid.c src/entities.c src/audio.c src/gui.c",
                 ],
             },
             "group": "build",
